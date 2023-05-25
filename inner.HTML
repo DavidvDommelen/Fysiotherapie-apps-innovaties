@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style type="text/css">
+        .chartBox{
+            width: 50px;
+            height: 20px;
+        }
+    </style>
+       <style>
+        body {
+          font-family: "Roboto", sans-serif;
+        }
+        h1 {
+          text-align: center;
+        }
+        table,
+        form {
+          width: 500px;
+          margin: 20px auto;
+        }
+        table {
+          border-collapse: collapse;
+        }
+        table td,
+        table th {
+          border: solid 1px black;
+        }
+        label,
+        input {
+          display: block;
+          margin: 10px 0;
+          font-size: 20px;
+        }
+        button {
+          display: block;
+        }
+      </style>
+
+</head>
+<body>
+
+    <script>
+        // === include 'setup' then 'config' above ===
+      
+        var myChart = new Chart(
+          document.getElementById('myChart'),
+          config
+        );
+      </script>
+
+<h1>Oefeningen voor thuis om het herstel process te versnellen</h1>
+<form>
+  <div class="input-row">
+    <label for="soort oefening">Soort oefening</label>
+    <input type="soort oefening" name="soort oefening" id="soort oefening" />
+  </div>
+  <div class="input-row">
+    <label for="de oefening zelf">De oefening zelf</label>
+    <input type="text" name="de oefening zelf" id="de oefening zelf" />
+  </div>
+  <button>Voeg toe</button>
+</form>
+<table>
+  <thead>
+    <tr>
+      <th>Soort oefening</th>
+      <th>De oefening zelf</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<script>
+    const formEl= document.querySelector("form");
+    const tbodyEl = document.querySelector("tbody");
+    const tableEl = document.querySelector("table");
+
+    function onAddWebsite(e) {
+        e.preventDefault();
+        const website = document.getElementById('de oefening zelf').value;
+        const url = document.getElementById('soort oefening').value;
+        tbodyEl.innerHTML += `
+            <tr>
+                <td>${url}</td>
+                <td>${website}</td>
+                <td><button class="deleteBtn">Delete</button></td>
+            </tr>
+        `;
+    } 
+    function onDeleteRow(e){
+        if (!e.target.classList.contains("deleteBtn")) {
+            return;
+        }
+        const btn = e.target;
+        btn.closest("tr").remove();
+    }
+
+    formEl.addEventListener("submit", onAddWebsite);
+    tableEl.addEventListener("click", onDeleteRow);
+</script>
+
+</body>
+<h2> Fysio Herstel Proces Per Week</h2>
+<canvas id="myChart" width="50" height="10"></canvas>
+<div>
+    <label for = "aantal weken"> Weken </label>
+    <input name = "aantal weken" id= "aantal weken" types = "number">
+    <label for = "category"> Categorie</label>
+    <input name = "category" id= "category" type= "text" >
+
+    <label for = "Voeg weken toe"> Voeg weken toe</label>
+    <input name = "Voeg weken toe" id= "Voeg weken toe" type="text" >
+</div>
+<button onclick="addData(myChart)">Voeg doelstelling toe</button>
+<button onclick="removeData(myChart)">Verwijder doelstelling</button>
+<button onclick="myVote(myChart)">Voeg een week toe aan de doelstelling</button>
+
+<script>
+var ctx = document.getElementById('myChart');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Pijnvermindering', 'Beweegelijkheid verbeteren', 'Spanning van de spieren verminderen', 'Kracht van de spieren verbeteren', 'Terugkeer naar sport/Activiteit'],
+        datasets: [{
+            label: 'aantal weken',
+            data: [2, 2, 4, 5, 6],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    
+    options: {
+        maintainAspectRatio: true,
+        indexAxis:'y',
+        scales: {
+            x: {
+                beginAtZero: true
+            
+            }
+        }
+    }
+
+});
+
+function addData(chart) {
+    chart.data.labels.push(document.getElementById("category").value);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(document.getElementById("aantal weken").value * 1);
+    });
+    chart.update();
+}
+
+function removeData(chart) {
+    chart.data.labels.pop();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+    chart.update();
+}
+
+function myVote(chart) {
+    let wekenIndex =chart.data.labels.indexOf(document.getElementById("Voeg weken toe").value);
+    chart.data.datasets[0].data[voteIndex] +=1;
+    chart.update()
+}
+
+/*
+
+Persoonlijk account van maken verbinden met FireBase.
+
+
+met Oorzaak pijnklachten
+(spieren,pezen,banden,kapsel, overbelast, verzwikt,verrekt)
+
+- plan
+(massage,rekken,kracht verbeteren, load management)
+
+- duur herstel
+(weken,maanden)
+
+
+Oefeningen:
+Week 1
+Week 2
+Week 3
+Week 4
+Week 5
+Week 6
+etc. 
+
+*/
+
+
+/* 
+
+Login account aanmaken
+
+Met Firebase koppelen
+
+*/
+
+</script>
+
+
+
+</html>
+
+
+
+
+
+
+
+
